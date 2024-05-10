@@ -1,0 +1,63 @@
+:root {
+  --c-c4s: #ff7f00;
+  --c-c4s-light: #ffbf7f;
+  --c-c4s-dark: #7f3f00;
+}
+
+.mt-25vh {
+  margin-top: 25vh;
+}
+
+.mw-xs {
+  max-width: 120px;
+}
+.mw-sm {
+  max-width: 360px;
+}
+.mw-md {
+  max-width: 480px;
+}
+.mw-lg {
+  max-width: 960px;
+}
+.mw-xl {
+  max-width: 1200px;
+}
+.mw-xxl {
+  max-width: 1600px;
+}
+
+.h-eq {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.rounded-sm {
+  border-radius: 5px;
+}
+.rounded-md {
+  border-radius: 10px;
+}
+.rounded-lg {
+  border-radius: 15px;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.pointer {
+  cursor: pointer;
+}
+.pointer:hover {
+  animation: itemhover 0.15s ease-out 0s 1 reverse;
+  opacity: 70%;
+}
+@keyframes itemhover {
+  from {
+    opacity: 70%;
+  }
+  to {
+    opacity: 100%;
+  }
+}
