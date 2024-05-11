@@ -9,7 +9,7 @@
         </div>
       </div>
       <!-- ハンバーガーメニュー（ボタン） -->
-      <div v-if="responsive" class="w-100 mw-menu px-3 my-auto pointer">
+      <div v-if="$store.getters.responsive" class="w-100 mw-menu px-3 my-auto pointer">
         <label for="menuBtn" class="mb-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"

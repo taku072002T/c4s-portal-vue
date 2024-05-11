@@ -1,5 +1,5 @@
 <template>
-  <h1 class="mt-5 text-center">{{ pagename }}</h1>
+  <h1 class="mt-5 mb-5 text-center">{{ pagename }}</h1>
   <!-- <CodeForm /> -->
 
   <div class="mw-xxl mx-auto p-3">
@@ -354,9 +354,8 @@ export default {
         MSG = '（きょう）'
       }
       if (compareDate(Shift(TODAY, 1), BEGIN)) {
-        MSG = '（きのう）'
+        MSG = '（あした）'
       }
-      console.log(LIST(Shift(TODAY, 1)), LIST(BEGIN))
       if (compareDate(Shift(TODAY, 2), BEGIN)) {
         MSG = '（あさって）'
       }

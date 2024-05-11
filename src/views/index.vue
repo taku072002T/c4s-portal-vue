@@ -1,18 +1,17 @@
 <template>
-  <h1 class="mt-5 text-center">{{ pagename }}</h1>
+  <h1 class="mt-5 mb-5 text-center">{{ pagename }}</h1>
 </template>
 
 <script>
 export default {
-  name: "TopPage",
+  name: 'TopPage',
   data() {
     return {
-      pagename: "トップ" 
+      pagename: 'トップ'
     }
   }
 }
 </script>
 
 <style>
-
 </style>

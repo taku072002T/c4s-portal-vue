@@ -22,6 +22,11 @@ const store = createStore({
     setC4sUser(state, snapshot) {
       state.c4suser = snapshot
     }
+  },
+  getters: {
+    responsive() {
+      return window.innerWidth < 800
+    }
   }
 })
 

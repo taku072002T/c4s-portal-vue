@@ -1,5 +1,5 @@
 <template>
-  <h1 class="my-5 text-center">{{ pagename }}</h1>
+  <h1 class="my-5 mb-5 text-center">{{ pagename }}</h1>
 
   <div>
     <p class="text-center">部員登録・各種サービスのご利用にはログインが必要です</p>
