@@ -64,6 +64,7 @@ export default {
       signInWithEmailLink(auth, email, window.location.href).then(() => {
         location.search = ''
       })
+      return
     }
     // ユーザー情報のセット
     onAuthStateChanged(auth, async (snapshot) => {
@@ -77,6 +78,8 @@ export default {
           this.$store.commit('setC4sUser', snapshot.val())
           if (snapshot.val()) {
             status = 'member'
+          } else {
+            status = 'stranger'
           }
         })
         await get(ref(db, `admin-users/${this.$store.state.user.uid}`)).then((snapshot) => {

@@ -28,7 +28,11 @@
       <div v-else class="w-auto py-3 ms-auto my-auto text-end d-flex">
         <div v-for="page in pages" :key="page.path">
           <router-link
-            v-if="page.state != 'adminonly' || $store.state.status == 'admin'"
+            v-if="
+              $store.state.status == 'admin' ||
+              ($store.state.status == 'member' && page.state != 'adminonly') ||
+              ($store.state.status == 'stranger' && page.state == 'public')
+            "
             class="pointer mx-3 text-decoration-none"
             :to="page.path"
             :style="`color: ${page.state == 'adminonly' ? color.admin : color.public}`"
@@ -43,7 +47,14 @@
   <!-- スマホ用メニュー -->
   <div class="menu mw-xl mx-auto">
     <div v-for="page in pages" :key="page.path">
-      <div class="menu_content" v-if="page.state != 'adminonly' || $store.state.status == 'admin'">
+      <div
+        class="menu_content"
+        v-if="
+          $store.state.status == 'admin' ||
+          ($store.state.status == 'member' && page.state != 'adminonly') ||
+          ($store.state.status == 'stranger' && page.state == 'public')
+        "
+      >
         <router-link
           class="menu_text pointer h4 text-decoration-none"
           :to="page.path"
@@ -82,7 +93,7 @@ export default {
         {
           title: '部費通帳',
           path: '/money',
-          state: 'adminonly'
+          state: 'memberonly'
         },
         {
           title: '備品一覧',
@@ -108,7 +119,6 @@ export default {
       admin: false
     }
   },
-  created() {},
   methods: {
     go(path) {
       location.href = path

@@ -134,7 +134,7 @@
             </p>
             <hr class="my-1" />
             <p v-html="event.description" />
-            <div class="mt-2 d-flex mt-auto" v-if="$store.state.status == 'member' || 'false'">
+            <div class="mt-2 d-flex mt-auto" v-if="$store.state.status == 'member' || 'admin'">
               <div class="balloon1-right">
                 <p>アンケート</p>
               </div>

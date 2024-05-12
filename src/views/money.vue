@@ -72,7 +72,7 @@
 
 <script>
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref, get, set, onValue } from 'firebase/database'
+import { getDatabase, ref, onValue } from 'firebase/database'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBE60G8yImWlENWpCnQZzqqVUrwWa_torg',
