@@ -81,7 +81,13 @@
             :class="`${event.type || 'assembly'}_card`"
             v-if="editting == id"
           >
-            <EventEditor :data="event" :id="id" @save="upload" @close="editting = ''" />
+            <EventEditor
+              :data="event"
+              :id="id"
+              :users="users"
+              @save="upload"
+              @close="editting = ''"
+            />
           </div>
           <hr class="my-3" />
         </div>
@@ -186,7 +192,13 @@
             :class="`${event.type || 'assembly'}_card`"
             v-if="editting == id"
           >
-            <EventEditor :data="event" :id="id" @save="upload" @close="editting = ''" />
+            <EventEditor
+              :data="event"
+              :id="id"
+              :users="users"
+              @save="upload"
+              @close="editting = ''"
+            />
           </div>
         </div>
       </div>
@@ -250,7 +262,13 @@
             :class="`${event.type || 'assembly'}_card`"
             v-if="editting == id"
           >
-            <EventEditor :data="event" :id="id" @save="upload" @close="editting = ''" />
+            <EventEditor
+              :data="event"
+              :id="id"
+              :users="users"
+              @save="upload"
+              @close="editting = ''"
+            />
           </div>
         </div>
       </div>
@@ -260,7 +278,7 @@
 
 <script>
 import { initializeApp } from 'firebase/app'
-import { getDatabase, onValue, ref, set, update, remove } from 'firebase/database'
+import { getDatabase, onValue, ref, set, update, remove, get } from 'firebase/database'
 
 import EventEditor from '@/components/EventEditor.vue'
 // import CodeForm from "@/components/CodeForm.vue"
@@ -289,6 +307,7 @@ export default {
     return {
       pagename: 'イベント情報',
       ready: false,
+      users: {},
       Events: {},
       endEvents: {},
       heldEvents: {},
@@ -298,6 +317,13 @@ export default {
     }
   },
   created() {
+    get(ref(db, 'users'))
+      .then((snapshot) => {
+        this.users = snapshot.val()
+      })
+      .catch((e) => {
+        console.error(e)
+      })
     onValue(ref(db, 'event'), (snapshot) => {
       this.Events = {}
       this.heldEvents = {}
