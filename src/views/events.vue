@@ -242,7 +242,7 @@
             <p class="mb-0" v-html="event.description" />
             <div class="position-absolute top-0 end-0 p-4">
               <h5 class="text-secondary">
-                <span class="ms-4 bi bi-person-check" v-if="event.code"></span>
+                <span class="ms-4 bi bi-person-check" v-if="event.attenders"></span>
                 <span
                   class="ms-4 bi bi-pencil-square pointer"
                   v-if="$store.state.status == 'admin'"
