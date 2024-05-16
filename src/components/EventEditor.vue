@@ -293,8 +293,8 @@ export default {
   computed: {
     notice() {
       const usersKeys = this.$store.getters.usersKeys
-      const notice = this.event.notice
-      const attenders = this.event.attenders
+      const notice = this.event.notice || {}
+      const attenders = this.event.attenders || {}
       let attend = []
       let absent = []
       let code = []
