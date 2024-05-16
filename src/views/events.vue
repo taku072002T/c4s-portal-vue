@@ -1,6 +1,7 @@
 <template>
   <h1 class="mt-5 mb-5 text-center">{{ pagename }}</h1>
-  <!-- <CodeForm /> -->
+
+  <CodeForm v-if="codeform_id" :id="codeform_id" :data="codeform_data" @close="codeform_id = ''" />
 
   <div class="mw-xxl mx-auto p-3">
     <!-- placeholder -->
@@ -8,12 +9,12 @@
       <div v-for="n in 9" :key="n" class="col-md-6 col-xl-4 p-2">
         <div class="bg-white rounded-3 p-4 shadow-sm h-100" :class="`work_card`">
           <h5><span class="badge bg-secondary"></span></h5>
-          <h5 class="mb-0 placeholder w-100"></h5>
-          <p class="mb-0 small text-secondary placeholder w-75"></p>
+          <h5 class="mb-0 placeholder w-100" />
+          <p class="mb-0 small text-secondary placeholder w-75" />
           <hr class="my-1" />
-          <p class="placeholder w-100 mb-1"></p>
-          <p class="placeholder w-100 mb-1"></p>
-          <p class="placeholder w-75"></p>
+          <p class="placeholder w-100 mb-1" />
+          <p class="placeholder w-100 mb-1" />
+          <p class="placeholder w-75" />
         </div>
       </div>
     </div>
@@ -49,7 +50,8 @@
             <div class="mt-2 d-flex mt-auto" v-if="$store.state.user">
               <div
                 v-if="event.code && (!event.attenders || !event.attenders[$store.state.user.uid])"
-                class="w-100 rounded-1 bg-c4s-light c4s-dark border py-3 text-center hover pointer"
+                class="w-100 rounded-1 bg-c4s-light text-white border py-3 text-center hover pointer"
+                @click="openCodeform(id)"
               >
                 <h4 class="mb-0"><i class="bi bi-person-plus"></i> 出席登録する</h4>
               </div>
@@ -242,7 +244,7 @@
             <p class="mb-0" v-html="event.description" />
             <div class="position-absolute top-0 end-0 p-4">
               <h5 class="text-secondary">
-                <span class="ms-4 bi bi-person-check" v-if="event.code"></span>
+                <span class="ms-4 bi bi-person-check" v-if="event.attenders"></span>
                 <span
                   class="ms-4 bi bi-pencil-square pointer"
                   v-if="$store.state.status == 'admin'"
@@ -281,7 +283,7 @@ import { initializeApp } from 'firebase/app'
 import { getDatabase, onValue, ref, set, update, remove, get } from 'firebase/database'
 
 import EventEditor from '@/components/EventEditor.vue'
-// import CodeForm from "@/components/CodeForm.vue"
+import CodeForm from '@/components/CodeForm.vue'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBE60G8yImWlENWpCnQZzqqVUrwWa_torg',
@@ -300,8 +302,8 @@ const db = getDatabase(app)
 export default {
   name: 'EventPage',
   components: {
-    EventEditor
-    // CodeForm
+    EventEditor,
+    CodeForm
   },
   data() {
     return {
@@ -313,7 +315,9 @@ export default {
       heldEvents: {},
       editting: '',
       aditting_allday: false,
-      open_endEvents: false
+      open_endEvents: false,
+      codeform_id: '',
+      codeform_data: {}
     }
   },
   created() {
@@ -372,7 +376,7 @@ export default {
         return String(str)[1] ? str : '0' + str
       }
       const compareDate = (a, b) => {
-        return LIST(a)[0] == LIST(b)[0] && LIST(a)[1] == LIST(b)[1] && LIST(a)[2] == LIST(b)[2]
+        return LIST(a)[2] == LIST(b)[2] && LIST(a)[1] == LIST(b)[1] && LIST(a)[0] == LIST(b)[0]
       }
 
       let MSG = ''
@@ -422,6 +426,10 @@ export default {
         confirm(`二度と元には戻せません。ほんとうに削除してよろしいですか？`)
       )
         remove(ref(db, `event/${id}`))
+    },
+    openCodeform(id) {
+      this.codeform_id = id
+      this.codeform_data = this.heldEvents[id]
     }
   }
 }
@@ -494,5 +502,8 @@ export default {
   font-weight: bolder;
   color: darkred;
   border-bottom: darkred dashed 5px;
+}
+.bg-c4s-light {
+  background-color: var(--c-c4s);
 }
 </style>
