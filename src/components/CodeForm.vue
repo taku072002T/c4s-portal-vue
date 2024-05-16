@@ -13,7 +13,7 @@
           <button
             type="button"
             class="col-12 btn btn-outline-dark mt-3 rounded-pill w-100"
-            @click="attend()"
+            @click="check()"
           >
             <i class="bi bi-check"> </i>出席登録
           </button>
@@ -23,12 +23,15 @@
           <h3>出席コードが違います！</h3>
         </div>
       </div>
-      <div v-if="disp == 'success'" class="text-center text-success">
+      <div v-else-if="disp == 'loading'" class="my-5">
+        <div class="infty-loader mx-auto"></div>
+      </div>
+      <div v-else-if="disp == 'success'" class="text-center text-success">
         <h1><i class="bi bi-check-lg"></i></h1>
         <h3>出席が登録されました！</h3>
         <b>{{ data.point }}ポイント獲得！</b>
       </div>
-      <div v-if="disp == 'already'" class="text-primary text-center">
+      <div v-else-if="disp == 'already'" class="text-primary text-center">
         <h1><i class="bi bi-check-lg"></i></h1>
         <h3>すでに出席登録されています</h3>
       </div>
@@ -45,7 +48,7 @@ export default {
     PopUp
   },
   props: ['id', 'data'],
-  emits: ['close'],
+  emits: ['close', 'attend'],
   data() {
     return {
       answer: '',
@@ -54,7 +57,7 @@ export default {
     }
   },
   methods: {
-    attend() {
+    check() {
       // コード認証
       if (!this.data.code) {
         alert('このイベントには出席コードが登録されていません…なぜこの画面を表示出来ているんだ？')
@@ -65,7 +68,10 @@ export default {
         return
       }
       if (this.data.code == this.codeInput) {
-        this.disp = 'success'
+        this.disp = 'loading'
+        this.$emit('attend', this.id, () => {
+          this.disp = 'success'
+        })
       } else {
         this.disp = 'failed'
       }
@@ -85,5 +91,16 @@ export default {
   border: none;
   border-bottom: solid 1px gray;
   border-radius: 0;
+}
+.infty-loader {
+  width: calc(80px / cos(45deg));
+  height: 14px;
+  background: repeating-linear-gradient(-45deg, #000 0 15px, #0000 0 20px) left/200% 100%;
+  animation: l3 2s infinite linear;
+}
+@keyframes l3 {
+  100% {
+    background-position: right;
+  }
 }
 </style>

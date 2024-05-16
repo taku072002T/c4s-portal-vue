@@ -1,7 +1,13 @@
 <template>
   <h1 class="mt-5 mb-5 text-center">{{ pagename }}</h1>
 
-  <CodeForm v-if="codeform_id" :id="codeform_id" :data="codeform_data" @close="codeform_id = ''" />
+  <CodeForm
+    v-if="codeform_id"
+    :id="codeform_id"
+    :data="codeform_data"
+    @close="codeform_id = ''"
+    @attend="attend"
+  />
 
   <div class="mw-xxl mx-auto p-3">
     <!-- placeholder -->
@@ -280,7 +286,7 @@
 
 <script>
 import { initializeApp } from 'firebase/app'
-import { getDatabase, onValue, ref, set, update, remove, get } from 'firebase/database'
+import { getDatabase, onValue, ref, set, update, remove, get, push } from 'firebase/database'
 
 import EventEditor from '@/components/EventEditor.vue'
 import CodeForm from '@/components/CodeForm.vue'
@@ -430,6 +436,27 @@ export default {
     openCodeform(id) {
       this.codeform_id = id
       this.codeform_data = this.heldEvents[id]
+    },
+    async attend(id, callback) {
+      await set(ref(db, `event/${id}/attenders/${this.$store.state.user.uid}`), true)
+      await set(
+        ref(db, `users/${this.$store.state.user.uid}/point`),
+        Number(this.$store.state.c4suser.point) + Number(this.heldEvents[id].point)
+      )
+      await push(
+        ref(db, `users/${this.$store.state.user.uid}/${new Date().getFullYear()}/pointHistory`),
+        {
+          amount: Number(this.$store.state.c4suser.point),
+          date: new Date().getTime(),
+          mode: 1,
+          title: `【出席登録】${this.heldEvents[id].title}`
+        }
+      )
+      await push(ref(db, `users/${this.$store.state.user.uid}/attend`), {
+        date: new Date().getTime(),
+        title: this.heldEvents[id].title
+      })
+      callback()
     }
   }
 }
