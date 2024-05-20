@@ -97,6 +97,9 @@ export default {
         return
       }
       this.money.price = this.mode * this.money.price_
+      if (this.mode == 1) {
+        this.money.liquid = true
+      }
       // 送信
       this.$emit('send', this.sendID, this.money)
     },
@@ -109,6 +112,7 @@ export default {
   }
 }
 
+// ChatGPT製のディープコピー関数
 function deepCopy(obj) {
   if (obj === null || typeof obj !== 'object') {
     return obj

@@ -166,7 +166,15 @@ export default {
           this.moneyData[this.getYear(element.date)] = {}
         }
         this.moneyData[this.getYear(element.date)][key] = element
-        this.total += element.price
+        if (element.liquid) {
+          this.total += element.price
+        } else if (element.type == 'FeePaid') {
+          set(ref(db, `money/${key}/liquid`), true).then(() => {
+            console.warn('部費支払いが未精算として登録されていたため、清算処理を実行しました。')
+          })
+        } else {
+          console.log(`${element.name}は未精算のため合計に含めていません`)
+        }
       }
       console.warn('データを取得しました')
       console.log(this.moneyData)
@@ -219,6 +227,7 @@ export default {
     // 清算済みにする
     liquid(id) {
       if (!confirm('清算済みにしますか？')) return
+      if (!confirm('元に戻せません。清算してよろしいですか？')) return
       set(ref(db, `money/${id}/liquid`), true)
     },
     // 送信
@@ -229,6 +238,7 @@ export default {
         this.selectedYear = this.getYear(data.date)
       })
     },
+    // 削除
     del(key) {
       if (!confirm(this.snapshot[key].name + 'を削除します。よろしいですか？')) {
         return
