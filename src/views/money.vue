@@ -1,6 +1,18 @@
 <template>
   <h1 class="mt-5 mb-5 text-center">{{ pagename }}</h1>
-  <div class="row mb-5 mw-lg mx-auto">
+
+  <MoneyEditor
+    v-if="openModal"
+    :data="snapshot[editID]"
+    :id="editID"
+    @close="openModal = false"
+    @send="send"
+  />
+
+  <div v-if="total == '---,---'">
+    <LoadingComp />
+  </div>
+  <div v-else class="row mb-5 mw-lg mx-auto">
     <div class="col-lg-6">
       <!-- 残高表示 -->
       <div class="w-100 px-3 mb-3 text-light">
@@ -31,12 +43,24 @@
           {{ key }}年度
         </option>
       </select>
+      <!-- 新規 -->
+      <div class="w-100 px-3 mb-2">
+        <div
+          class="bg-white border-dashed shadow-sm rounded-3 py-3 w-95 mx-auto mb-2 d-flex pointer"
+          v-if="admin"
+          @click="addnew()"
+        >
+          <h6 class="mb-0 text-secondary text-center w-100">
+            <i class="bi bi-plus-square-dotted"> </i> 新規登録
+          </h6>
+        </div>
+      </div>
       <!-- 明細 -->
       <div v-for="(element, key) in moneyData[selectedYear]" :key="key" class="w-100 px-3 mb-2">
         <!-- 部費支払い -->
         <div
           class="bg-white border border-success shadow-sm rounded-3 py-1 w-95 mx-auto d-flex"
-          :class="$store.state.status == 'admin' ? 'pointer' : ''"
+          :class="admin ? 'pointer' : ''"
           v-if="element.type == 'FeePaid'"
         >
           <h6 class="col-4 text-end text-success mb-0">部費収入</h6>
@@ -45,20 +69,40 @@
         </div>
         <!-- その他収入・支出 -->
         <div
-          class="bg-white border shadow-sm rounded-md w-100 mx-auto mb-2 px-1 py-2 row pointer hover"
+          class="bg-white border shadow-sm rounded-md w-100 mx-auto mb-2 px-3 py-2 hover"
           :class="element.price < 0 ? 'border-primary' : 'border-success'"
           v-else
         >
-          <div class="col-8">
-            <h6 class="mb-0">{{ element.name }}</h6>
-            <p class="text-secondary small mb-0">{{ getDateText(new Date(element.date)) }}</p>
+          <div
+            class="d-flex"
+            :class="admin ? 'pointer' : ''"
+            @click="editID = editID == key ? '' : key"
+          >
+            <div class="col-8">
+              <h6 class="mb-0">{{ element.name }}</h6>
+              <p class="text-secondary small mb-0">
+                {{ editID == key ? element.date : getDateText(new Date(element.date)) }}
+              </p>
+            </div>
+            <div class="col-4">
+              <h4
+                class="mb-0 text-end"
+                :class="element.price < 0 ? 'text-primary' : 'text-success'"
+              >
+                {{ element.price > 0 ? '+' : '' }}{{ Number(element.price).toLocaleString() }}
+              </h4>
+            </div>
           </div>
-          <div class="col-4">
-            <h4 class="mb-0 text-end" :class="element.price < 0 ? 'text-primary' : 'text-success'">
-              {{ element.price > 0 ? '+' : '' }}{{ Number(element.price).toLocaleString() }}
-            </h4>
+          <div v-if="editID == key">
+            <hr class="my-2" />
+            <div class="d-flex">
+              <p class="col-10 mb-1">{{ element.detail }}</p>
+              <p class="col-2 text-end mb-1 text-secondary">
+                <span class="bi bi-pencil-square pointer" @click="openModal = true"></span>
+              </p>
+            </div>
           </div>
-          <div v-if="!element.liquid">
+          <div v-if="!element.liquid" @click="liquid(key)" class="pointer">
             <hr class="my-2" />
             <div class="text-danger text-center fw-bold">
               <i class="bi bi-exclamation-circle-fill"> </i>未精算
@@ -72,7 +116,9 @@
 
 <script>
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref, onValue } from 'firebase/database'
+import { getDatabase, ref, onValue, set, update } from 'firebase/database'
+import LoadingComp from '@/components/LoadingComp.vue'
+import MoneyEditor from '@/components/MoneyEditor.vue'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBE60G8yImWlENWpCnQZzqqVUrwWa_torg',
@@ -90,18 +136,28 @@ const db = getDatabase(app)
 
 export default {
   name: 'MoneyPage',
+  components: {
+    LoadingComp,
+    MoneyEditor
+  },
   data() {
     return {
       pagename: '部費通帳',
+      loading: true,
       selectedYear: this.getYear().toString(),
+      snapshot: {},
       moneyData: {},
-      total: '---,---'
+      total: '---,---',
+      editID: '',
+      openModal: false
     }
   },
   created() {
+    this.$store.commit('setStatusMessage', '部費情報を取得中')
     // データを取得
     onValue(ref(db, 'money'), (snapshot) => {
       const data = snapshot.val()
+      this.snapshot = data
       const reversedKeys = Object.keys(data).reverse()
       this.total = 0
       for (const i in reversedKeys) {
@@ -155,6 +211,29 @@ export default {
       if (Shift(TODAY, -5) < DATE)
         return `${Math.round((Shift(TODAY, 7) - DATE) / (1000 * 60 * 60 * 24))}日前`
       return `${LIST(DATE)[1]}月${LIST(DATE)[2]}日`
+    },
+    // 新規作成
+    addnew() {
+      this.editID = '__NEW'
+      this.openModal = true
+    },
+    // 清算済みにする
+    liquid(id) {
+      if (!confirm('清算済みにしますか？')) return
+      set(ref(db, `money/${id}/liquid`), true)
+    },
+    // 送信
+    send(id, data) {
+      this.openModal = false
+      update(ref(db, `money/${id}`), data).then(() => {
+        this.editID = id
+        this.selectedYear = this.getYear(data.date)
+      })
+    }
+  },
+  computed: {
+    admin() {
+      return this.$store.state.status == 'admin'
     }
   }
 }
@@ -171,5 +250,8 @@ export default {
 }
 .w-95 {
   width: 95%;
+}
+.border-dashed {
+  border: darkgray dashed 1px;
 }
 </style>
