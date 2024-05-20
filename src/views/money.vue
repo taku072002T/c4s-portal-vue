@@ -57,7 +57,7 @@
           >
             <h6 class="col-4 text-end text-success mb-0">部費収入</h6>
             <p class="col-4 text-center text-secondary small mb-0">
-              {{ getDateText(element.date) }}
+              {{ editID == key ? element.date : getDateText(element.date) }}
             </p>
             <h6 class="col-4 text-success mb-0">+{{ element.price.toLocaleString() }}</h6>
           </div>
