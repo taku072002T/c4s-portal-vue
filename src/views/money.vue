@@ -44,24 +44,42 @@
         </option>
       </select>
       <!-- 明細 -->
-      <div
-        v-for="(element, key) in moneyData[selectedYear]"
-        :key="-1 * new Date(element.date).getTime()"
-        class="w-100 px-3 mb-2"
-      >
+      <div v-for="(element, key) in moneyData[selectedYear]" :key="key" class="w-100 px-3 mb-2">
         <!-- 部費支払い -->
         <div
-          class="bg-white border border-success shadow-sm rounded-3 py-1 w-95 mx-auto d-flex"
-          :class="admin ? 'pointer' : ''"
+          class="bg-white border border-success shadow-sm rounded-3 px-3 py-1 w-95 mx-auto"
           v-if="element.type == 'FeePaid'"
         >
-          <h6 class="col-4 text-end text-success mb-0">部費収入</h6>
-          <p class="col-4 text-center text-secondary small mb-0">{{ getDateText(element.date) }}</p>
-          <h6 class="col-4 text-success mb-0">+{{ element.price.toLocaleString() }}</h6>
+          <div
+            class="d-flex"
+            :class="admin ? 'pointer' : ''"
+            @click="editID = editID == key ? '' : key"
+          >
+            <h6 class="col-4 text-end text-success mb-0">部費収入</h6>
+            <p class="col-4 text-center text-secondary small mb-0">
+              {{ getDateText(element.date) }}
+            </p>
+            <h6 class="col-4 text-success mb-0">+{{ element.price.toLocaleString() }}</h6>
+          </div>
+          <div v-if="editID == key">
+            <hr class="my-1" />
+            <div class="d-flex">
+              <p class="col-10 mb-0 text-center">{{ element.name }}</p>
+              <p class="col-2 text-end mb-0 text-secondary">
+                <span class="ms-3 bi bi-file-earmark-x pointer" @click="del(key)"></span>
+              </p>
+            </div>
+          </div>
+          <div v-if="!element.liquid" @click="liquid(key)" class="pointer">
+            <hr class="my-2" />
+            <div class="text-danger text-center fw-bold">
+              <i class="bi bi-exclamation-circle-fill"> </i>未精算
+            </div>
+          </div>
         </div>
         <!-- その他収入・支出 -->
         <div
-          class="bg-white border shadow-sm rounded-md w-100 mx-auto mb-2 px-3 py-2 hover"
+          class="bg-white border shadow-sm rounded-md w-100 mx-auto mb-2 px-3 py-2"
           :class="element.price < 0 ? 'border-primary' : 'border-success'"
           v-else
         >
@@ -88,8 +106,8 @@
           <div v-if="editID == key">
             <hr class="my-2" />
             <div class="d-flex">
-              <p class="col-10 mb-1">{{ element.detail }}</p>
-              <p class="col-2 text-end mb-1 text-secondary">
+              <p class="col-9 mb-1">{{ element.detail }}</p>
+              <p class="col-3 text-end mb-1 text-secondary">
                 <span class="ms-3 bi bi-pencil-square pointer" @click="openModal = true"></span>
                 <span class="ms-3 bi bi-file-earmark-x pointer" @click="del(key)"></span>
               </p>
