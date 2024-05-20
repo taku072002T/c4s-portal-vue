@@ -13,7 +13,7 @@
     <!-- placeholder -->
     <div v-if="!ready" class="row">
       <div v-for="n in 9" :key="n" class="col-md-6 col-xl-4 p-2">
-        <div class="bg-white rounded-3 p-4 shadow-sm h-100" :class="`work_card`">
+        <div class="bg-white rounded-3 p-4 shadow-sm h-100 placeholder-glow" :class="`work_card`">
           <h5><span class="badge bg-secondary"></span></h5>
           <h5 class="mb-0 placeholder w-100" />
           <p class="mb-0 small text-secondary placeholder w-75" />
