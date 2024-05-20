@@ -71,7 +71,7 @@ export default {
       this.$store.commit('setUser', snapshot)
       if (this.$store.state.user) {
         this.$store.commit('setStatus', 'loading')
-        this.$store.commit('setStatusMessage', '権限情報を読み込み中…')
+        this.$store.commit('setStatusMessage', '権限情報を読み込み中')
         window.localStorage.setItem('email', this.$store.state.user.email)
         let status = 'login'
         await get(ref(db, `users/${this.$store.state.user.uid}`)).then((snapshot) => {

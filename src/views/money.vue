@@ -12,7 +12,7 @@
   <div v-if="total == '---,---'">
     <LoadingComp />
   </div>
-  <div v-else class="row mb-5 mw-lg mx-auto">
+  <div v-else class="row mb-more mw-lg mx-auto">
     <div class="col-lg-6">
       <!-- 残高表示 -->
       <div class="w-100 px-3 mb-3 text-light">
@@ -43,20 +43,12 @@
           {{ key }}年度
         </option>
       </select>
-      <!-- 新規 -->
-      <div class="w-100 px-3 mb-2">
-        <div
-          class="bg-white border-dashed shadow-sm rounded-3 py-3 w-95 mx-auto mb-2 d-flex pointer"
-          v-if="admin"
-          @click="addnew()"
-        >
-          <h6 class="mb-0 text-secondary text-center w-100">
-            <i class="bi bi-plus-square-dotted"> </i> 新規登録
-          </h6>
-        </div>
-      </div>
       <!-- 明細 -->
-      <div v-for="(element, key) in moneyData[selectedYear]" :key="key" class="w-100 px-3 mb-2">
+      <div
+        v-for="(element, key) in moneyData[selectedYear]"
+        :key="-1 * new Date(element.date).getTime()"
+        class="w-100 px-3 mb-2"
+      >
         <!-- 部費支払い -->
         <div
           class="bg-white border border-success shadow-sm rounded-3 py-1 w-95 mx-auto d-flex"
@@ -98,7 +90,8 @@
             <div class="d-flex">
               <p class="col-10 mb-1">{{ element.detail }}</p>
               <p class="col-2 text-end mb-1 text-secondary">
-                <span class="bi bi-pencil-square pointer" @click="openModal = true"></span>
+                <span class="ms-3 bi bi-pencil-square pointer" @click="openModal = true"></span>
+                <span class="ms-3 bi bi-file-earmark-x pointer" @click="del(key)"></span>
               </p>
             </div>
           </div>
@@ -112,11 +105,16 @@
       </div>
     </div>
   </div>
+
+  <!-- 新規 -->
+  <div class="RBbtn rounded-circle text-center pointer" v-if="admin" @click="addnew()">
+    <h1 class="bi bi-plus-lg lh-50"></h1>
+  </div>
 </template>
 
 <script>
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref, onValue, set, update } from 'firebase/database'
+import { getDatabase, ref, onValue, set, update, remove } from 'firebase/database'
 import LoadingComp from '@/components/LoadingComp.vue'
 import MoneyEditor from '@/components/MoneyEditor.vue'
 
@@ -160,6 +158,7 @@ export default {
       this.snapshot = data
       const reversedKeys = Object.keys(data).reverse()
       this.total = 0
+      this.moneyData = {}
       for (const i in reversedKeys) {
         const key = reversedKeys[i]
         const element = data[key]
@@ -169,9 +168,9 @@ export default {
         this.moneyData[this.getYear(element.date)][key] = element
         this.total += element.price
       }
+      console.warn('データを取得しました')
+      console.log(this.moneyData)
     })
-    console.warn('データを取得しました')
-    console.log(this.moneyData)
   },
   methods: {
     // 年度を取得（3月までは前年になる）
@@ -229,6 +228,15 @@ export default {
         this.editID = id
         this.selectedYear = this.getYear(data.date)
       })
+    },
+    del(key) {
+      if (!confirm(this.snapshot[key].name + 'を削除します。よろしいですか？')) {
+        return
+      }
+      if (!confirm('元に戻せません。よろしいですか？')) {
+        return
+      }
+      remove(ref(db, `money/${key}`)).catch((e) => alert(e.message))
     }
   },
   computed: {
@@ -253,5 +261,23 @@ export default {
 }
 .border-dashed {
   border: darkgray dashed 1px;
+}
+.RBbtn {
+  position: fixed;
+  bottom: 30px;
+  right: 25px;
+  width: 50px;
+  height: 50px;
+  background-color: #1f1f1f;
+  color: #dfdfdf;
+  font-weight: bold;
+  z-index: 50;
+}
+.lh-50 {
+  line-height: 50px;
+  margin: 0;
+}
+.mb-more {
+  margin-bottom: 100px;
 }
 </style>

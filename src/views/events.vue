@@ -446,7 +446,7 @@ export default {
       await push(
         ref(db, `users/${this.$store.state.user.uid}/pointHistory/${new Date().getFullYear()}`),
         {
-          amount: Number(this.$store.state.c4suser.point),
+          amount: Number(this.heldEvents[id].point),
           date: new Date().getTime(),
           mode: 1,
           title: `【出席登録】${this.heldEvents[id].title}`
