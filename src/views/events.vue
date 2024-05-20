@@ -444,7 +444,7 @@ export default {
         Number(this.$store.state.c4suser.point) + Number(this.heldEvents[id].point)
       )
       await push(
-        ref(db, `users/${this.$store.state.user.uid}/${new Date().getFullYear()}/pointHistory`),
+        ref(db, `users/${this.$store.state.user.uid}/pointHistory/${new Date().getFullYear()}`),
         {
           amount: Number(this.$store.state.c4suser.point),
           date: new Date().getTime(),
