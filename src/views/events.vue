@@ -56,7 +56,7 @@
             <div class="mt-2 d-flex mt-auto" v-if="$store.state.user">
               <div
                 v-if="event.code && (!event.attenders || !event.attenders[$store.state.user.uid])"
-                class="w-100 rounded-1 bg-c4s-light text-white border py-3 text-center hover pointer"
+                class="w-100 rounded-1 bg-c4s-light text-white border py-3 text-center pointer"
                 @click="openCodeform(id)"
               >
                 <h4 class="mb-0"><i class="bi bi-person-plus"></i> 出席登録する</h4>
@@ -115,7 +115,7 @@
           <div
             v-else
             @click="editting = '__NEW'"
-            class="rounded-3 p-4 shadow-sm hover pointer h-100 add_card d-flex justify-content-center align-items-center"
+            class="rounded-3 p-4 shadow-sm pointer h-100 add_card d-flex justify-content-center align-items-center"
           >
             <h5 class="mb-0 text-secondary text-center">
               <i class="bi bi-plus-square-dotted"> </i> 新規登録
@@ -153,7 +153,7 @@
                 <p>アンケート</p>
               </div>
               <div
-                class="Qbtn hover pointer"
+                class="Qbtn pointer"
                 :class="
                   event.notice && event.notice[$store.state.user.uid] == 1
                     ? 'attend'
@@ -167,7 +167,7 @@
                 }}</span>
               </div>
               <div
-                class="Qbtn hover pointer"
+                class="Qbtn pointer"
                 :class="
                   event.notice && event.notice[$store.state.user.uid] == -1
                     ? 'absent'
@@ -213,7 +213,7 @@
       <!-- past events -->
       <input type="checkbox" id="open_endEvents" style="display: none" />
       <label
-        class="h4 text-secondary hover pointer"
+        class="h4 text-secondary pointer"
         for="open_endEvents"
         @click="open_endEvents = !open_endEvents"
       >
@@ -286,7 +286,7 @@
 
 <script>
 import { initializeApp } from 'firebase/app'
-import { getDatabase, onValue, ref, set, update, remove, get, push } from 'firebase/database'
+import { getDatabase, onValue, ref, set, update, remove, push } from 'firebase/database'
 
 import EventEditor from '@/components/EventEditor.vue'
 import CodeForm from '@/components/CodeForm.vue'
@@ -315,7 +315,6 @@ export default {
     return {
       pagename: 'イベント情報',
       ready: false,
-      users: {},
       Events: {},
       endEvents: {},
       heldEvents: {},
@@ -327,13 +326,6 @@ export default {
     }
   },
   created() {
-    get(ref(db, 'users'))
-      .then((snapshot) => {
-        this.users = snapshot.val()
-      })
-      .catch((e) => {
-        console.error(e)
-      })
     onValue(ref(db, 'event'), (snapshot) => {
       this.Events = {}
       this.heldEvents = {}
@@ -428,7 +420,7 @@ export default {
     },
     del(id) {
       if (
-        confirm(`「${this.Events[id].title}」を削除してよろしいですか？`) &&
+        confirm(`「${(this.Events[id] || this.endEvents[id]).title}」を削除してよろしいですか？`) &&
         confirm(`二度と元には戻せません。ほんとうに削除してよろしいですか？`)
       )
         remove(ref(db, `event/${id}`))
@@ -457,6 +449,11 @@ export default {
         title: this.heldEvents[id].title
       })
       callback()
+    }
+  },
+  computed: {
+    users() {
+      return this.$store.state.users
     }
   }
 }

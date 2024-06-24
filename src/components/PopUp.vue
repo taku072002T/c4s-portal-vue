@@ -1,7 +1,11 @@
 <template>
-  <div class="background" v-if="open">
+  <div class="background">
     <div class="popup">
       <div class="box">
+        <div v-if="title">
+          <h4 class="text-center">{{ title }}</h4>
+          <hr class="mt-1 mb-3" />
+        </div>
         <slot />
       </div>
       <div class="mt-3 text-center text-white pointer closebtn" @click="$emit('close')">
@@ -14,7 +18,7 @@
 <script>
 export default {
   name: 'PopUp',
-  props: ['open'],
+  props: ['title'],
   emits: ['close']
 }
 </script>

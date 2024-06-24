@@ -8,43 +8,60 @@ import Mypage from '@/views/mypage.vue'
 import Admin from '@/views/admin.vue'
 import Notfound from '@/views/notfound.vue'
 
+import MemberList from '@/components/admin/MemberList.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
       component: TopPage
     },
     {
       path: '/article',
-      name: 'article',
       component: Article
     },
     {
       path: '/events',
-      name: 'events',
       component: Events
     },
     {
       path: '/money',
-      name: 'money',
       component: Money
     },
     {
       path: '/equips',
-      name: 'equips',
       component: Equips
     },
     {
       path: '/mypage',
-      name: 'mypage',
       component: Mypage
     },
     {
       path: '/admin',
-      name: 'admin',
-      component: Admin
+      component: Admin,
+      children: [
+        {
+          path: 'members',
+          component: MemberList
+        },
+        {
+          path: 'dashboard',
+          component: Notfound
+        },
+        {
+          path: 'fee',
+          component: Notfound
+        },
+        {
+          path: 'magazine',
+          component: Notfound
+        },
+        {
+          path: 'shop',
+          component: Notfound
+        }
+      ]
     },
     {
       path: '/:pathMatch(.*)*',

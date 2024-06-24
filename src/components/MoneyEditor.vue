@@ -84,7 +84,7 @@ export default {
         alert('名目を入力してください')
         return
       }
-      if (this.money.price_ <= 0) {
+      if (!this.money.price_ || this.money.price_ < 0) {
         alert('金額は正しく入力してください')
         return
       }

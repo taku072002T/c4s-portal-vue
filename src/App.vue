@@ -82,9 +82,10 @@ export default {
             status = 'stranger'
           }
         })
-        await get(ref(db, `admin-users/${this.$store.state.user.uid}`)).then((snapshot) => {
-          if (snapshot.val()) {
+        await get(ref(db, `admin-users`)).then((snapshot) => {
+          if (snapshot.val()[this.$store.state.user.uid]) {
             status = 'admin'
+            this.$store.commit('setAdminUsers', snapshot.val())
             get(ref(db, 'users')).then((snapshot) => {
               this.$store.commit('setUsers', snapshot.val())
             })

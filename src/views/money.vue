@@ -28,6 +28,7 @@
       <div class="w-100 px-3 mb-3" v-if="!$store.getters.responsive">
         <div class="w-100 border p-3 rounded-3">
           <p class="mb-0 text-secondary text-center">ここに残高推移グラフを表示</p>
+          <!-- <ChartJS /> -->
         </div>
       </div>
     </div>
@@ -106,8 +107,8 @@
           <div v-if="editID == key">
             <hr class="my-2" />
             <div class="d-flex">
-              <p class="col-9 mb-1">{{ element.detail }}</p>
-              <p class="col-3 text-end mb-1 text-secondary">
+              <p class="mb-1">{{ element.detail }}</p>
+              <p class="flex-grow-1 text-end mb-1 text-secondary text-nowrap">
                 <span class="ms-3 bi bi-pencil-square pointer" @click="openModal = true"></span>
                 <span class="ms-3 bi bi-file-earmark-x pointer" @click="del(key)"></span>
               </p>

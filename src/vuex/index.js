@@ -7,7 +7,8 @@ const store = createStore({
       status_msg: 'ユーザー情報を読み込み中',
       user: {},
       c4suser: {},
-      users: {}
+      users: {},
+      adminUsers: {}
     }
   },
   mutations: {
@@ -25,6 +26,9 @@ const store = createStore({
     },
     setUsers(state, snapshot) {
       state.users = snapshot
+    },
+    setAdminUsers(state, snapshot) {
+      state.adminUsers = snapshot
     }
   },
   getters: {
@@ -32,25 +36,71 @@ const store = createStore({
       return window.innerWidth < 800
     },
     usersKeys(state) {
+      const users = state.users
+
+      if (!users[state.user.uid]) {
+        return []
+      }
+
       let leader, subleader, treasurer
       let actives = []
       let news = []
+      let others = []
 
-      const users = state.users
-      for (const key in users) {
-        if (Object.hasOwnProperty.call(users, key)) {
-          switch (users[key].role) {
-            case "leader": leader = key; break;
-            case "subleader": subleader = key; break;
-            case "treasurer": treasurer = key; break;
-            case "active": actives.push(key); break;
-            case "new": news.push(key); break;
-            default: break;
+      // 登録日順に並び替え
+      let keys = Object.keys(users)
+      keys.sort((a, b) => {
+        return users[a].time - users[b].time
+      })
+
+      // 役職ごとに分類
+      for (const i in keys) {
+        if (Object.hasOwnProperty.call(keys, i)) {
+          const key = keys[i]
+          switch (users[keys[i]].role) {
+            case 'leader':
+              leader = key
+              break
+            case 'subleader':
+              subleader = key
+              break
+            case 'treasurer':
+              treasurer = key
+              break
+            case 'active':
+              actives.push(key)
+              break
+            case 'new':
+              news.push(key)
+              break
+            default:
+              others.push(key)
+              break
           }
         }
       }
 
-      return [leader, subleader, treasurer, ...actives, ...news]
+      // 現役・新入部員は学年ごとに並び替え
+      actives.sort((a, b) => {
+        return users[b].grade - users[a].grade
+      })
+      news.sort((a, b) => {
+        return users[b].grade - users[a].grade
+      })
+
+      // 管理者は先頭へ
+      let kanrisha = []
+      let soreigai = []
+      for (const i in actives) {
+        if (Object.hasOwnProperty.call(actives, i)) {
+          const uid = actives[i]
+          ;(state.adminUsers[uid] ? kanrisha : soreigai).push(uid)
+        }
+      }
+
+      // const result = [leader, subleader, treasurer, ...actives, ...news]
+      const result = [leader, subleader, treasurer, ...kanrisha, ...soreigai, ...news, ...others]
+      return result
     }
   }
 })

@@ -129,7 +129,7 @@
     <div class="row">
       <div class="w-50 pe-1">
         <div
-          class="rounded-1 border text-center py-2 text-secondary hover pointer"
+          class="rounded-1 border text-center py-2 text-secondary pointer"
           @click="confirm_('閉じてよろしいですか？') ? close() : ''"
         >
           キャンセル
@@ -137,7 +137,7 @@
       </div>
       <div class="w-50 ps-1">
         <div
-          class="rounded-1 bg-secondary text-center py-2 text-light hover pointer"
+          class="rounded-1 bg-secondary text-center py-2 text-light pointer"
           @click="confirm_('この内容で送信してよろしいですか？') ? send() : ''"
         >
           保存
@@ -151,13 +151,17 @@
       <div class="col-6">
         <h6 class="text-center">出席</h6>
         <div v-for="key in notice.attend" :key="key">
-          <p class="mb-1 text-center">{{ users[key].name }}</p>
+          <p class="mb-1 text-center">
+            {{ `${users[key].name}${users[key].nickname ? '(' + users[key].nickname + ')' : ''}` }}
+          </p>
         </div>
       </div>
       <div class="col-6">
         <h6 class="text-center text-secondary">欠席</h6>
         <div v-for="key in notice.absent" :key="key">
-          <p class="mb-1 text-center text-secondary">{{ users[key].name }}</p>
+          <p class="mb-1 text-center text-secondary">
+            {{ `${users[key].name}${users[key].nickname ? '(' + users[key].nickname + ')' : ''}` }}
+          </p>
         </div>
       </div>
     </div>
@@ -165,7 +169,7 @@
 
     <div class="w-50 pe-1">
       <div
-        class="rounded-1 border text-center py-2 text-secondary hover pointer"
+        class="rounded-1 border text-center py-2 text-secondary pointer"
         @click="confirm_('閉じてよろしいですか？') ? close() : ''"
       >
         とじる
@@ -185,7 +189,7 @@
     <div v-else><p class="text-secondary text-center my-3">出席登録されていません</p></div>
     <div class="w-50 pe-1">
       <div
-        class="rounded-1 border text-center py-2 text-secondary hover pointer"
+        class="rounded-1 border text-center py-2 text-secondary pointer"
         @click="confirm_('閉じてよろしいですか？') ? close() : ''"
       >
         とじる

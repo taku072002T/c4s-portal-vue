@@ -1,5 +1,5 @@
 <template>
-  <PopUp :open="id" @close="$emit('close')">
+  <PopUp v-if="id" @close="$emit('close')">
     <div class="py-3">
       <div v-if="disp == 'default' || disp == 'failed'">
         <h5 class="text-center">出席コード</h5>

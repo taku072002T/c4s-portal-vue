@@ -107,7 +107,7 @@ export default {
         },
         {
           title: '管理画面',
-          path: '/admin',
+          path: '/admin/members',
           state: 'adminonly'
         }
       ],
