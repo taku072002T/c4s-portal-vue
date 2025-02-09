@@ -4,14 +4,14 @@
     <div class="box_det">
       <input
         size="30"
-        type="text"
+        type="number"
         class="wide"
-        name="Email"
-        placeholder="メールアドレスを入力"
-        v-model="MailInput"
+        name="StudentsNumbers"
+        placeholder="学籍番号を入力"
+        v-model="SNumInput"
       />
     </div>
-    <button class="startBtn" @click="$emit('send', 'Email', MailInput)">認証する</button>
+    <button class="startBtn" @click="$emit('send', 'StudentsNumbers', SNumInput + "@ed.tus.ac.jp")">認証する</button>
   </div>
 </template>
 
@@ -19,7 +19,7 @@
 export default {
   name: 'LoginForm',
   data() {
-    return { MailInput: '' }
+    return { SNumInput: '' }
   }
 }
 </script>

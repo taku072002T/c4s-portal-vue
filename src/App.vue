@@ -7,7 +7,7 @@
   </div>
   <div v-else-if="st == 'sendedMail'">
     <div class="text-center">
-      <h5 class="mt-25vh">メールを送信しました</h5>
+      <h5 class="mt-25vh">大学のメールアドレス宛にメールを送信しました</h5>
       <p>メール内のリンクを開いて認証を完了してください</p>
       <a class="text-secondary mt-5 small" @click="$store.commit('setStatus', 'logout')"
         >再送する</a
@@ -102,7 +102,7 @@ export default {
     login(provider, email) {
       switch (provider) {
         // メールリンク認証
-        case 'Email':
+        case 'StudentsNumbers':
           if (!email) {
             alert('メールアドレスが入力されていません')
           } else if (!email.includes('@')) {
