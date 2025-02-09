@@ -1,6 +1,6 @@
 <template>
   <div class="mw-sm mx-auto mx-auto mt-25vh">
-    <p class="fw-bold text-center text-danger mb-0">ご利用にはメールアドレス認証が必要です</p>
+    <p class="fw-bold text-center text-danger mb-0">ご利用には学籍番号による認証が必要です</p>
     <div class="box_det">
       <input
         size="30"
@@ -11,7 +11,7 @@
         v-model="SNumInput"
       />
     </div>
-    <button class="startBtn" @click="$emit('send', 'StudentsNumbers', SNumInput + "@ed.tus.ac.jp")">認証する</button>
+    <button class="startBtn" @click="$emit('send', 'StudentsNumbers', SNumInput + '@ed.tus.ac.jp')">認証する</button>
   </div>
 </template>
 
