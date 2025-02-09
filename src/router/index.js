@@ -38,6 +38,10 @@ const router = createRouter({
       component: Mypage
     },
     {
+      path: '/procedure',
+      component: Procedure
+    },
+    {
       path: '/admin',
       component: Admin,
       children: [
