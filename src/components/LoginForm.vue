@@ -9,9 +9,10 @@
         name="StudentsNumbers"
         placeholder="学籍番号を入力"
         v-model="SNumInput"
+        max="9999999"
       />
     </div>
-    <button class="startBtn" @click="$emit('send', 'StudentsNumbers', SNumInput + '@ed.tus.ac.jp')">認証する</button>
+    <button class="startBtn" @click="checkInput(SNumInput)">認証する</button>
   </div>
 </template>
 
@@ -20,6 +21,33 @@ export default {
   name: 'LoginForm',
   data() {
     return { SNumInput: '' }
+  },
+
+  methods: {
+    // 特定の位の数を返す (targetには取り出す元の数を、nには右から何番目の数を取り出すのかを指定する => n=2のときはtargetの10の位を取り出す)
+    exportTheNum(target, n){
+      return Math.floor((target / (10 ** (n - 1))) % 10)
+    },
+
+    checkInput(inputContent){
+      // 現在の年 (西暦)
+      const currentYear = new Date().getFullYear();
+
+      // 現在の年の下2桁
+      const year_tail2 = this.exportTheNum(currentYear, 2) * 10 + this.exportTheNum(currentYear, 1);
+      const userInputEnterYear = this.exportTheNum(inputContent, 5) * 10 + this.exportTheNum(inputContent, 4);
+
+      // 桁数確認 & 入学年度の確認(10年以内に入学している)
+      if(inputContent.toString().length == 7){
+        if((year_tail2 - userInputEnterYear) <= 10 && (year_tail2 - userInputEnterYear) >= 0){
+          this.$emit('send', 'StudentsNumbers', inputContent.toString() + '@ed.tus.ac.jp')
+        } else {
+          alert("入学年度が無効です。");
+        }
+      } else {
+        alert("無効な数字です。");
+      }
+    }
   }
 }
 </script>
