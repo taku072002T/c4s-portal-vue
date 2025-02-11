@@ -30,7 +30,7 @@
           <router-link
             v-if="
               $store.state.status == 'admin' ||
-              ($store.state.status == 'member' && page.state != 'adminonly') ||
+              ($store.state.status == 'member' && page.state != 'adminonly' && !$store.state.maintenance) ||
               ($store.state.status == 'stranger' && page.state == 'public')
             "
             class="pointer mx-3 text-decoration-none"
@@ -51,7 +51,7 @@
         class="menu_content"
         v-if="
           $store.state.status == 'admin' ||
-          ($store.state.status == 'member' && page.state != 'adminonly') ||
+          ($store.state.status == 'member' && page.state != 'adminonly' && !$store.state.maintenance) ||
           ($store.state.status == 'stranger' && page.state == 'public')
         "
       >

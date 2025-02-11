@@ -8,7 +8,8 @@ const store = createStore({
       user: {},
       c4suser: {},
       users: {},
-      adminUsers: {}
+      adminUsers: {},
+      maintenance: {}
     }
   },
   mutations: {
@@ -29,6 +30,9 @@ const store = createStore({
     },
     setAdminUsers(state, snapshot) {
       state.adminUsers = snapshot
+    },
+    setMaintenance(state, snapshot) {
+      state.maintenance = snapshot
     }
   },
   getters: {

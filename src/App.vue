@@ -92,6 +92,15 @@ export default {
           }
         })
         this.$store.commit('setStatus', status)
+
+        // メンテナンスをしているかどうかを確認した上で、メンテナンスの処理を行うユーザーに対してメンテナンス状態を保持する
+        await get(ref(db, `systemData/maintenance`)).then((snapshot) => {
+          if (snapshot.val() && $store.state.status != 'admin') {
+            this.$store.commit('setMaintenance', true)
+          } else {
+            this.$store.commit('setMaintenance', false)
+          }
+        })
       } else {
         this.$store.commit('setStatus', 'logout')
       }
