@@ -4,7 +4,7 @@
     <div class="mw-xxl mx-auto d-flex">
       <!-- トップロゴ -->
       <div class="flex-grow-1 p-3">
-        <div class="pointer mw-logo" @click="location.href = `/`">
+        <div class="pointer mw-logo" @click="location.href = go('/')">
           <img src="@/assets/portal2024_logo.svg" class="w-100" />
         </div>
       </div>
