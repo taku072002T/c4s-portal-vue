@@ -78,7 +78,7 @@ export default {
         {
           title: 'トップ',
           path: '/',
-          state: 'adminonly'
+          state: 'public'
         },
         {
           title: '掲示板',
