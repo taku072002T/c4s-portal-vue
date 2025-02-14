@@ -3,7 +3,7 @@
 
   <div class="text-center">
     <div v-if="$store.state.maintenance">
-      <h5><strong class="mentenanceMsg">現在、メンテナンス中です。終了までしばらくお待ちください。</strong></h5>
+      <h5><strong class="maintenanceMsg">現在、メンテナンス中です。終了までしばらくお待ちください。</strong></h5>
     </div>
 
     <div v-else>
@@ -28,7 +28,7 @@ export default {
 </script>
 
 <style>
- .mentenanceMsg{
+ .maintenanceMsg{
   color: rgb(255, 58, 58);
  }
 </style>

@@ -50,6 +50,10 @@ export default {
         {
           path: 'shop',
           name: 'ショップ管理'
+        },
+        {
+          path: 'others',
+          name: 'その他'
         }
       ]
     }

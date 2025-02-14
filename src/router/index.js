@@ -9,6 +9,7 @@ import Admin from '@/views/admin.vue'
 import Notfound from '@/views/notfound.vue'
 
 import MemberList from '@/components/admin/MemberList.vue'
+import Others from '@/components/admin/others.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -60,6 +61,10 @@ const router = createRouter({
         {
           path: 'shop',
           component: Notfound
+        },
+        {
+          path: 'others',
+          component: Others
         }
       ]
     },
