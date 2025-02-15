@@ -1,5 +1,6 @@
 <template>
   <div class="leftSide">
+    <h5>メンテナンスの設定</h5>
     <div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" role="switch" id="maintenanceSwitcher">
       <label class="form-check-label" for="maintenanceSwitcher">メンテナンスの切り替え</label>
@@ -27,42 +28,55 @@
 
   export default {
     name: 'Others',
-    methods: {
-      users() {
-        return this.$store.state.users
-      }
-    },
-
-    created(){
-      if(this.$store.state.maintenanceState){
-        $("#maintenanceSwitcher").prop("checked", true);
-      }      
-    },
 
     mounted(){
-      $("#maintenanceSwitcher").on("click", function() {
+      if(this.$store.state.maintenanceState){
+        $("#maintenanceSwitcher").prop("checked", true);
+      }
+
+      $("#maintenanceSwitcher").on("click", () => {
+        // isCheckedはこのイベントが実行されるときには既にクリック後のboolになっているため、変更前を保存するために!が付いている
         const isChecked = !$(this).prop("checked");
-        console.log(isChecked)
 
-        if(!isChecked){
-          const checkUSER = window.confirm("メンテナンスモードを開始しますか？");
+        if(this.$store.state.status == 'admin'){
+          const maintenancePath = 'systemData/maintenance';
 
-          if(checkUSER){
-            alert("メンテナンスモードを開始しました。");
+          if(!isChecked){
+            const checkUSER = window.confirm("メンテナンスモードを開始しますか？");
+
+            if(checkUSER){
+              this.databaseChange(maintenancePath, !isChecked)
+              alert("メンテナンスモードを開始しました。");
+            } else {
+              $("#maintenanceSwitcher").prop("checked", isChecked);
+            }
           } else {
-            $("#maintenanceSwitcher").prop("checked", isChecked);
+            const checkUSER = window.confirm("メンテナンスモードを終了しますか？");
+
+            if(checkUSER){
+              this.databaseChange(maintenancePath, !isChecked)
+              alert("メンテナンスモードを終了しました。");
+            } else {
+              $("#maintenanceSwitcher").prop("checked", isChecked);
+            }
           }
         } else {
-          const checkUSER = window.confirm("メンテナンスモードを終了しますか？");
-
-          if(checkUSER){
-            alert("メンテナンスモードを終了しました。");
-          } else {
-            $("#maintenanceSwitcher").prop("checked", isChecked);
-          }
+          alert('アクセス権限がないため、変更できません。');
+          $("#maintenanceSwitcher").prop("checked", isChecked);
         }
-        
       })
+    },
+
+    methods: {
+      databaseChange(path, content){
+        set(ref(db, path), content)
+          .then(() => {
+            console.log("データが更新されました");
+          })
+          .catch((error) => {
+            console.log("error: " + error);
+          });
+      }
     }
   }
 </script>
