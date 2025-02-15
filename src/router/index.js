@@ -6,6 +6,7 @@ import Money from '@/views/money.vue'
 import Equips from '@/views/equips.vue'
 import Mypage from '@/views/mypage.vue'
 import Admin from '@/views/admin.vue'
+import Maintenance from '@/views/maintenance.vue'
 import Notfound from '@/views/notfound.vue'
 
 import MemberList from '@/components/admin/MemberList.vue'
@@ -37,6 +38,10 @@ const router = createRouter({
     {
       path: '/mypage',
       component: Mypage
+    },
+    {
+      path: '/maintenance',
+      component: Maintenance
     },
     {
       path: '/admin',

@@ -31,7 +31,7 @@
             v-if="
               $store.state.status == 'admin' ||
               ($store.state.status == 'member' && page.state != 'adminonly' && !$store.state.maintenance) ||
-              ($store.state.status == 'stranger' && page.state == 'public')
+              ($store.state.status == 'stranger' && page.state == 'public' && !($store.state.maintenance && page.path == '/events'))
             "
             class="pointer mx-3 text-decoration-none"
             :to="page.path"
@@ -52,7 +52,7 @@
         v-if="
           $store.state.status == 'admin' ||
           ($store.state.status == 'member' && page.state != 'adminonly' && !$store.state.maintenance) ||
-          ($store.state.status == 'stranger' && page.state == 'public')
+          ($store.state.status == 'stranger' && page.state == 'public' && !($store.state.maintenance && page.path == '/events'))
         "
       >
         <router-link

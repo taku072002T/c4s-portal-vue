@@ -3,6 +3,7 @@
 
   <div class="text-center">
     <div v-if="$store.state.maintenance">
+      <!-- maintenance.vueを作成したので、この表示は使用していない -->
       <h5><strong class="maintenanceMsg">現在、メンテナンス中です。終了までしばらくお待ちください。</strong></h5>
     </div>
 
