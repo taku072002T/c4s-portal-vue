@@ -96,9 +96,18 @@ export default {
         // メンテナンスをしているかどうかを確認した上で、メンテナンスの処理を行うユーザーに対してメンテナンス状態を保持する
         await get(ref(db, `systemData/maintenance`)).then((snapshot) => {
           if (snapshot.val() && $store.state.status != 'admin') {
-            this.$store.commit('setMaintenance', true)
+            this.$store.commit('setMaintenanceState', true)
+            switch($store.state.status){
+              case 'admin':
+                this.$store.commit('setMaintenance', false)
+                break;
+              default:
+                this.$store.commit('setMaintenance', true)
+                break;
+            }
           } else {
             this.$store.commit('setMaintenance', false)
+            this.$store.commit('setMaintenanceState', false)
           }
         })
       } else {

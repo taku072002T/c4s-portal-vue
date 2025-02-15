@@ -9,7 +9,8 @@ const store = createStore({
       c4suser: {},
       users: {},
       adminUsers: {},
-      maintenance: {}
+      maintenance: {},  // 今利用しているユーザーがメンテナンスの影響を受けるかどうか
+      maintenanceState: {}  // 現在、メンテナンスを実施しているのか
     }
   },
   mutations: {
@@ -33,6 +34,9 @@ const store = createStore({
     },
     setMaintenance(state, snapshot) {
       state.maintenance = snapshot
+    },
+    setMaintenanceState(state, snapshot) {
+      state.maintenanceState = snapshot
     }
   },
   getters: {
