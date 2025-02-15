@@ -1,10 +1,14 @@
 <template>
-  <div class="leftSide">
+  <div class="leftSide" v-if="this.$store.state.status == 'admin'">
     <h5>メンテナンスの設定</h5>
     <div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" role="switch" id="maintenanceSwitcher">
       <label class="form-check-label" for="maintenanceSwitcher">メンテナンスの切り替え</label>
     </div>
+  </div>
+
+  <div class="leftSide" v-else>
+    <h5 class="warn">管理者権限がないため、このページは閲覧できません。</h5>
   </div>
 </template>
 
@@ -85,5 +89,10 @@
   .leftSide{
     margin-left: 5%;
     margin-top: 5%;
+  }
+
+  .warn{
+    color: red;
+    font-weight: bold;
   }
 </style>
