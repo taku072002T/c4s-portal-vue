@@ -9,7 +9,7 @@ import Admin from '@/views/admin.vue'
 import Notfound from '@/views/notfound.vue'
 
 import MemberList from '@/components/admin/MemberList.vue'
-import Others from '@/components/admin/others.vue'
+import Others from '@/components/admin/Others.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
