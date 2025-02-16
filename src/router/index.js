@@ -10,6 +10,7 @@ import Notfound from '@/views/notfound.vue'
 
 import MemberList from '@/components/admin/MemberList.vue'
 import JoinForm from '@/views/JoinForm.vue'
+import Procedure from '@/views/procedure.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,6 +41,7 @@ const router = createRouter({
     },
     {
       path: '/procedure',
+      component: Procedure,
       children:[
         {
           path: 'exit',

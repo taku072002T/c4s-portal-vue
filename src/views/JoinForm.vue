@@ -137,7 +137,7 @@
     </div>
     <!--enter-->
     <div class="mw-sm mx-auto mb-5">
-      <div class="w-75 mx-auto rounded-pill text-center pointer hover my-3" style="line-height: 3em; background: #FF7F00; color: white;" id="DOUI-btn" onclick="DOUI()">同意する</div>
+      <div class="w-75 mx-auto rounded-pill text-center pointer hover my-3" style="line-height: 3em; background: black; color: white;" id="DOUI-btn" onclick="DOUI()">同意する</div>
       <div class="w-75 mx-auto rounded-pill text-center               my-3" style="line-height: 3em; background: #FFDFCF; color: dimgray;" id="upload-btn" onclick="upload()">入部する</div>
     </div>
   </div>
