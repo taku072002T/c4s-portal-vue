@@ -34,13 +34,16 @@
     name: 'Others',
 
     mounted(){
+      // 現在のメンテナンス状況をスイッチに反映。
       if(this.$store.state.maintenanceState){
         $("#maintenanceSwitcher").prop("checked", true);
+      } else if(!this.$store.state.maintenanceState){
+        $("#maintenanceSwitcher").prop("checked", false);
       }
 
       $("#maintenanceSwitcher").on("click", () => {
         // isCheckedはこのイベントが実行されるときには既にクリック後のboolになっているため、変更前を保存するために!が付いている
-        const isChecked = !$(this).prop("checked");
+        const isChecked = $(this).prop("checked");
 
         if(this.$store.state.status == 'admin'){
           const maintenancePath = 'systemData/maintenance';

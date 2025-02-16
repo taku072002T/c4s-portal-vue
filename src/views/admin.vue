@@ -57,6 +57,14 @@ export default {
         }
       ]
     }
+  },
+  mounted() {
+    //　現在のパスをゲット
+    const currentPath = this.$route.path;
+    // 現在のパスがどのページかをゲット
+    const index = this.pages.findIndex(page => `/admin/${page.path}` === currentPath);
+    // そこを染めとく
+    this.tab = index;
   }
 }
 </script>
