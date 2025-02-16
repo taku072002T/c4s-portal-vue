@@ -72,10 +72,16 @@
     },
 
     methods: {
-      databaseChange(path, content){
-        set(ref(db, path), content)
+      databaseChange(path, content) {
+        // 更新内容をオブジェクト形式で指定
+        const updates = {
+          [path]: content
+        };
+
+        // updateを使って部分的にデータを更新
+        update(ref(db), updates)
           .then(() => {
-            console.log("データが更新されました");
+            console.log(path + "のデータが" + content + "に更新されました");
           })
           .catch((error) => {
             console.log("error: " + error);

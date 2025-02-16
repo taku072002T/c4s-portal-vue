@@ -28,7 +28,7 @@ import {
   sendSignInLinkToEmail,
   signInWithEmailLink
 } from 'firebase/auth'
-import { getDatabase, ref, get } from 'firebase/database'
+import { getDatabase, ref, get, onValue } from 'firebase/database'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBE60G8yImWlENWpCnQZzqqVUrwWa_torg',
@@ -48,6 +48,8 @@ const db = getDatabase(app)
 import LoadingComp from './components/LoadingComp.vue'
 import LoginForm from './components/LoginForm.vue'
 import MainHeader from './components/MainHeader.vue'
+import router from '@/router/index.js'
+
 
 export default {
   name: 'RouteView',
@@ -145,8 +147,43 @@ export default {
           alert('未設定のプロバイダ')
           break
       }
-    }
+    },
+    go(path) {
+      location.href = path
+    },
   },
+
+  mounted(){
+    // systemData/maintenanceの変更を検知
+    // onValue(ref(db, 'systemData/maintenance'), (snapshot) => {
+    //   const maintenanceData = snapshot.val();
+    //   console.log("メンテナンス状態が変更されました:", maintenanceData);
+
+    //   this.$store.commit('setMaintenanceState', maintenanceData)
+
+    //   if(this.$store.state.status != 'admin'){
+    //     this.$store.commit('setMaintenance', maintenanceData)
+    //   }
+
+    //   if (maintenanceData && window.location.href != '/mypage' && window.location.href != '/maintenance') {
+    //     this.go('/maintenance');
+    //   }
+    // });
+
+    router.beforeEach((to, next) => {
+      const isMaintenanceMode = this.$store.state.maintenance; // store instanceを直接参照
+      const allowedPaths = ['/mypage', '/maintenance'];
+      
+      if (isMaintenanceMode && !allowedPaths.includes(to.path)) {
+        // メンテナンスモード中で、許可されていないパスへの遷移の場合
+        next('/maintenance');
+      } else {
+        // それ以外は通常通り遷移を許可
+        next();
+      }
+    });
+  },
+
   computed: {
     st() {
       return this.$store.state.status

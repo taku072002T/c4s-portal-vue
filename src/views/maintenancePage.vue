@@ -3,7 +3,9 @@
   </template>
   
   <script>
-    
+    export default {
+        name: 'Maintenance'
+    }
   </script>
   
   <style>

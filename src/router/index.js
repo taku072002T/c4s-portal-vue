@@ -6,7 +6,7 @@ import Money from '@/views/money.vue'
 import Equips from '@/views/equips.vue'
 import Mypage from '@/views/mypage.vue'
 import Admin from '@/views/admin.vue'
-import Maintenance from '@/views/maintenance.vue'
+import Maintenance from '@/views/maintenancePage.vue'
 import Notfound from '@/views/notfound.vue'
 
 import MemberList from '@/components/admin/MemberList.vue'
