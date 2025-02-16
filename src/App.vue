@@ -154,32 +154,52 @@ export default {
   },
 
   mounted(){
-    // systemData/maintenanceの変更を検知
-    // onValue(ref(db, 'systemData/maintenance'), (snapshot) => {
-    //   const maintenanceData = snapshot.val();
-    //   console.log("メンテナンス状態が変更されました:", maintenanceData);
+    const allowedPaths = ['/mypage', '/maintenance'];
 
-    //   this.$store.commit('setMaintenanceState', maintenanceData)
-
-    //   if(this.$store.state.status != 'admin'){
-    //     this.$store.commit('setMaintenance', maintenanceData)
-    //   }
-
-    //   if (maintenanceData && window.location.href != '/mypage' && window.location.href != '/maintenance') {
-    //     this.go('/maintenance');
+    // 読み込み時に自動遷移するシステム、onValueで実装できたのでコメントアウトするが、今後使えるかもしれないので一応残しておく
+    // router.beforeEach((to, from, next) => {
+    //   const isMaintenanceMode = this.$store.state.maintenance; // store instanceを直接参照
+      
+    //   if (isMaintenanceMode && !allowedPaths.includes(to.path)) {
+    //     // メンテナンスモード中で、許可されていないパスへの遷移の場合
+    //     next('/maintenance');
+    //   } else {
+    //     // それ以外は通常通り遷移を許可
+    //     next();
     //   }
     // });
 
-    router.beforeEach((to, next) => {
-      const isMaintenanceMode = this.$store.state.maintenance; // store instanceを直接参照
-      const allowedPaths = ['/mypage', '/maintenance'];
-      
-      if (isMaintenanceMode && !allowedPaths.includes(to.path)) {
-        // メンテナンスモード中で、許可されていないパスへの遷移の場合
-        next('/maintenance');
-      } else {
-        // それ以外は通常通り遷移を許可
-        next();
+
+    // systemData/maintenanceの変更を検知
+    // マイページまたはメンテナンス画面以外にいるときにメンテナンス状態になるとメンテナンスページに強制移動
+    // メンテナンス画面にいるときにメンテナンスモードが終了するとトップに強制移動
+    onValue(ref(db, 'systemData/maintenance'), (snapshot) => {
+      const maintenanceData = snapshot.val();
+      console.log("メンテナンス状態が変更されました:", maintenanceData);
+
+      this.$store.commit('setMaintenanceState', maintenanceData);
+
+      // 管理者以外の場合のみメンテナンス状態を更新
+      if (this.$store.state.status !== 'admin') {
+        this.$store.commit('setMaintenance', maintenanceData);
+        
+        // 現在のパスを取得
+        const currentPath = router.currentRoute.value.path;
+
+        // メンテナンスモードがオンで、現在の場所が許可されていないパスの場合のみリダイレクト
+        if (maintenanceData && !allowedPaths.includes(currentPath)) {
+          router.push('/maintenance').catch(err => {
+            if (err.name !== 'NavigationDuplicated') {
+              throw err;
+            }
+          });
+        } else if (!maintenanceData && currentPath == '/maintenance') {
+          router.push('/').catch(err => {
+            if (err.name !== 'NavigationDuplicated') {
+              throw err;
+            }
+          });
+        }
       }
     });
   },
