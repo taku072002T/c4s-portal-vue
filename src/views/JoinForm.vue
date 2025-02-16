@@ -158,6 +158,7 @@
   
   <script>
   import ClubRule from '@/components/ClubRule.vue';
+  
   export default {
     components: {
       ClubRule
@@ -167,7 +168,10 @@
       return {
         pagename: '入部手続き'
       }
-    }
+    },
+    mounted() {
+    
+  }
   }
   </script>
   
