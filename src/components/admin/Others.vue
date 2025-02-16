@@ -37,8 +37,6 @@
       // 現在のメンテナンス状況をスイッチに反映。
       if(this.$store.state.maintenanceState){
         $("#maintenanceSwitcher").prop("checked", true);
-      } else if(!this.$store.state.maintenanceState){
-        $("#maintenanceSwitcher").prop("checked", false);
       }
 
       $("#maintenanceSwitcher").on("click", () => {
