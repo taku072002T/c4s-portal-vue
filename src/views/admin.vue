@@ -50,9 +50,21 @@ export default {
         {
           path: 'shop',
           name: 'ショップ管理'
+        },
+        {
+          path: 'others',
+          name: 'その他'
         }
       ]
     }
+  },
+  mounted() {
+    //　現在のパスをゲット
+    const currentPath = this.$route.path;
+    // 現在のパスがどのページかをゲット
+    const index = this.pages.findIndex(page => `/admin/${page.path}` === currentPath);
+    // そこを染めとく
+    this.tab = index;
   }
 }
 </script>

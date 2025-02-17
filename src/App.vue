@@ -28,7 +28,7 @@ import {
   sendSignInLinkToEmail,
   signInWithEmailLink
 } from 'firebase/auth'
-import { getDatabase, ref, get } from 'firebase/database'
+import { getDatabase, ref, get, onValue } from 'firebase/database'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBE60G8yImWlENWpCnQZzqqVUrwWa_torg',
@@ -48,6 +48,8 @@ const db = getDatabase(app)
 import LoadingComp from './components/LoadingComp.vue'
 import LoginForm from './components/LoginForm.vue'
 import MainHeader from './components/MainHeader.vue'
+import router from '@/router/index.js'
+
 
 export default {
   name: 'RouteView',
@@ -92,6 +94,24 @@ export default {
           }
         })
         this.$store.commit('setStatus', status)
+
+        // メンテナンスをしているかどうかを確認した上で、メンテナンスの処理を行うユーザーに対してメンテナンス状態を保持する
+        await get(ref(db, `systemData/maintenance`)).then((snapshot) => {
+          if (snapshot.val()) {
+            this.$store.commit('setMaintenanceState', true)
+            switch(this.$store.state.status){
+              case 'admin':
+                this.$store.commit('setMaintenance', false)
+                break;
+              default:
+                this.$store.commit('setMaintenance', true)
+                break;
+            }
+          } else {
+            this.$store.commit('setMaintenance', false)
+            this.$store.commit('setMaintenanceState', false)
+          }
+        })
       } else {
         this.$store.commit('setStatus', 'logout')
       }
@@ -127,8 +147,63 @@ export default {
           alert('未設定のプロバイダ')
           break
       }
-    }
+    },
+    go(path) {
+      location.href = path
+    },
   },
+
+  mounted(){
+    const allowedPaths = ['/mypage', '/maintenance'];
+
+    // 読み込み時に自動遷移するシステム、onValueで実装できたのでコメントアウトするが、今後使えるかもしれないので一応残しておく
+    // router.beforeEach((to, from, next) => {
+    //   const isMaintenanceMode = this.$store.state.maintenance; // store instanceを直接参照
+      
+    //   if (isMaintenanceMode && !allowedPaths.includes(to.path)) {
+    //     // メンテナンスモード中で、許可されていないパスへの遷移の場合
+    //     next('/maintenance');
+    //   } else {
+    //     // それ以外は通常通り遷移を許可
+    //     next();
+    //   }
+    // });
+
+
+    // systemData/maintenanceの変更を検知
+    // マイページまたはメンテナンス画面以外にいるときにメンテナンス状態になるとメンテナンスページに強制移動
+    // メンテナンス画面にいるときにメンテナンスモードが終了するとトップに強制移動
+    onValue(ref(db, 'systemData/maintenance'), (snapshot) => {
+      const maintenanceData = snapshot.val();
+      console.log("メンテナンス状態が変更されました:", maintenanceData);
+
+      this.$store.commit('setMaintenanceState', maintenanceData);
+
+      // 管理者以外の場合のみメンテナンス状態を更新
+      if (this.$store.state.status !== 'admin') {
+        this.$store.commit('setMaintenance', maintenanceData);
+        
+        // 現在のパスを取得
+        const currentPath = router.currentRoute.value.path;
+
+        // メンテナンスモードがオンで、現在の場所が許可されていないパスの場合のみリダイレクト
+        if (maintenanceData && !allowedPaths.includes(currentPath)) {
+          router.push('/maintenance').catch(err => {
+            if (err.name !== 'NavigationDuplicated') {
+              throw err;
+            }
+          });
+        } else if (!maintenanceData && currentPath == '/maintenance') {
+          router.push('/').catch(err => {
+            if (err.name !== 'NavigationDuplicated') {
+              throw err;
+            }
+          });
+        }
+      }
+    });
+  },
+
   computed: {
     st() {
       return this.$store.state.status
