@@ -39,7 +39,7 @@
         $("#maintenanceSwitcher").prop("checked", true);
       }
 
-      $("#maintenanceSwitcher").on("click", () => {
+      $("#maintenanceSwitcher").on("click", function () {
         // isCheckedはこのイベントが実行されるときには既にクリック後のboolになっているため、変更前を保存するために!が付いている
         const isChecked = !$(this).prop("checked");
 
