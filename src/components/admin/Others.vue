@@ -39,9 +39,9 @@
         $("#maintenanceSwitcher").prop("checked", true);
       }
 
-      $("#maintenanceSwitcher").on("click", function () {
+      $("#maintenanceSwitcher").on("click",  ()=> {
         // isCheckedはこのイベントが実行されるときには既にクリック後のboolになっているため、変更前を保存するために!が付いている
-        const isChecked = !$(this).prop("checked");
+        const isChecked = !$("#maintenanceSwitcher").prop("checked");
 
         if(this.$store.state.status == 'admin'){
           const maintenancePath = 'systemData/maintenance';
