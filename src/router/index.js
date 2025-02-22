@@ -36,6 +36,10 @@ const router = createRouter({
       component: Equips
     },
     {
+      path: '/convert',
+      component: ConvertPage
+    },
+    {
       path: '/mypage',
       component: Mypage
     },
